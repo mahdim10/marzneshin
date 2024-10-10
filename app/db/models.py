@@ -181,11 +181,6 @@ class User(Base):
         back_populates="user",
         cascade="all,delete,delete-orphan",
     )
-    notification_reminders = relationship(
-        "NotificationReminder",
-        back_populates="user",
-        cascade="all,delete,delete-orphan",
-    )
     data_limit = Column(BigInteger)
     data_limit_reset_strategy = Column(
         Enum(UserDataUsageResetStrategy),
@@ -441,17 +436,6 @@ class NodeUsage(Base):
     node = relationship("Node", back_populates="usages")
     uplink = Column(BigInteger, default=0)
     downlink = Column(BigInteger, default=0)
-
-
-class NotificationReminder(Base):
-    __tablename__ = "notification_reminders"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    user = relationship("User", back_populates="notification_reminders")
-    type = Column(Enum(ReminderType), nullable=False)
-    expires_at = Column(DateTime)
-    created_at = Column(DateTime, default=datetime.utcnow)
 
 
 class Settings(Base):
