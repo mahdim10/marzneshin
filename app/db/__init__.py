@@ -1,7 +1,8 @@
-from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+)
 
-from .base import Base, SessionLocal, engine  # noqa
+from .base import Base, get_db_session
 from .crud import (
     create_admin,
     create_notification_reminder,  # noqa
@@ -28,21 +29,6 @@ from .crud import (
     update_user_sub,
 )
 from .models import JWT, System, User  # noqa
-
-
-class GetDB:  # Context Manager
-    def __init__(self):
-        self.db = SessionLocal()
-
-    def __enter__(self):
-        return self.db
-
-    def __exit__(self, _, exc_value, traceback):
-        if isinstance(exc_value, SQLAlchemyError):
-            self.db.rollback()  # rollback on exception
-
-        self.db.close()
-
 
 __all__ = [
     "get_user",
@@ -72,5 +58,6 @@ __all__ = [
     "System",
     "JWT",
     "Base",
-    "Session",
+    "AsyncSession",
+    "get_db_session",
 ]
